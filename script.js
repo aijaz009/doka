@@ -1,78 +1,76 @@
 const { jsPDF } = window.jspdf;
-let rowCount = 0;
+let familyRowCount = 0;
 
-// Add Family Member
-function addRow() {
+// Add Family Table Rows
+function addFamilyRow() {
     const tbody = document.querySelector('#familyTable tbody');
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${++rowCount}</td>
-        <td><input type="text" required></td>
-        <td><input type="number" required></td>
-        <td><input type="text" required></td>
-        <td><input type="text" required></td>
-        <td><input type="text" required></td>
-        <td><button class="btn btn-sm btn-danger" onclick="this.closest('tr').remove(); updateSerial()">Remove</button></td>
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>${String(++familyRowCount).padStart(2, '0')}</td>
+        <td><input type="text"></td>
+        <td><input type="number"></td>
+        <td><input type="text"></td>
+        <td><input type="text"></td>
+        <td><input type="text"></td>
     `;
-    tbody.appendChild(row);
+    tbody.appendChild(newRow);
 }
 
-// Update Serial Numbers
-function updateSerial() {
-    document.querySelectorAll('#familyTable tbody tr').forEach((row, index) => {
-        row.cells[0].textContent = index + 1;
-    });
-}
-
-// Generate PDF
-document.getElementById('form').addEventListener('submit', async (e) => {
+// Generate PDF (Exact Replica)
+document.getElementById('form').addEventListener('submit', (e) => {
     e.preventDefault();
-
-    // Initialize PDF
     const doc = new jsPDF();
-    let yPos = 10;
+    
+    // Add Static Text (Matching PDF Format)
+    doc.setFontSize(16);
+    doc.text("Police    Station    Lar.", 105, 10, { align: 'center' });
+    doc.setFontSize(14);
+    doc.text("DETAILS OF NOMADS", 105, 20, { align: 'center' });
+    doc.setFontSize(12);
 
-    // Add Form Data
-    const fields = ['dhok', 'familyHead', 'parent', 'village', 'mohalla', 'landmark', 
-                    'adjacentDhoks', 'structure', 'age', 'profession', 'adhaar', 'cellNo', 'vehicle'];
-    fields.forEach(field => {
-        doc.text(`${field.replace(/([A-Z])/g, ' $1').toUpperCase()}: ${document.getElementById(field).value}`, 10, yPos);
-        yPos += 10;
+    // Add Fields with Underlines
+    let y = 40;
+    const fields = [
+        `LOCATION OF DHOK ${document.getElementById('dhok').value || '_________'}`,
+        `Name of Family Head ${document.getElementById('familyHead').value || '_________'}`,
+        `S/O, D/O, W/O ${document.getElementById('parent').value || '_________'}`,
+        `Village ${document.getElementById('village').value || '_________'} Mohalla ${document.getElementById('mohalla').value || '_________'}`,
+        `Land Mark ${document.getElementById('landmark').value || '_________'}`,
+        `Adjacent DHOKS ${document.getElementById('adjacentDhoks').value || '_________'}`,
+        `Structure Details ${document.getElementById('structure').value || '_________'}`,
+        `Age ${document.getElementById('age').value || '_________'} Profession ${document.getElementById('profession').value || '_________'}`,
+        `Adhaar Card No ${document.getElementById('adhaar').value || '_________'} Cell No ${document.getElementById('cellNo').value || '_________'}`,
+        `Vehicle Details if any ${document.getElementById('vehicle').value || '___ Nil ___'}`
+    ];
+
+    fields.forEach(text => {
+        doc.text(text, 10, y);
+        y += 10;
     });
 
-    // Add Family Table
-    const familyData = [];
-    document.querySelectorAll('#familyTable tbody tr').forEach(row => {
-        const cells = row.querySelectorAll('input');
-        familyData.push([
-            row.cells[0].textContent,
-            cells[0].value,
-            cells[1].value,
-            cells[2].value,
-            cells[3].value,
-            cells[4].value
-        ]);
-    });
+    // Add Family Table to PDF
     doc.autoTable({
-        head: [['S.No', 'Name', 'Age', 'Profession', 'Cell No', 'Relationship']],
-        body: familyData,
-        startY: yPos + 10,
-        theme: 'grid'
+        html: '#familyTable',
+        startY: y + 10,
+        theme: 'grid',
+        styles: { fontSize: 10, cellPadding: 3 },
+        headStyles: { fillColor: [255, 255, 255], textColor: 0, fontStyle: 'bold' }
     });
 
-    // Add Photo
-    const photo = document.getElementById('photo').files[0];
-    if (photo) {
+    // Add Live Photo
+    const photoInput = document.getElementById('photo');
+    if (photoInput.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
             img.src = e.target.result;
             img.onload = () => {
-                doc.addImage(img, 'JPEG', 10, doc.autoTable.previous.finalY + 10, 50, 50);
+                const finalY = doc.autoTable.previous.finalY + 10;
+                doc.addImage(img, 'JPEG', 10, finalY, 50, 50);
                 doc.save('nomad_details.pdf');
             };
         };
-        reader.readAsDataURL(photo);
+        reader.readAsDataURL(photoInput.files[0]);
     } else {
         doc.save('nomad_details.pdf');
     }
