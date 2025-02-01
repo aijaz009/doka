@@ -1,101 +1,79 @@
 const { jsPDF } = window.jspdf;
-let familyMemberCount = 0;
+let rowCount = 0;
 
-// Function to add a new family member row
-function addFamilyMember() {
-    familyMemberCount++;
-    const row = `
-        <tr>
-            <td>${familyMemberCount}</td>
-            <td><input type="text" class="form-control" name="name${familyMemberCount}" required></td>
-            <td><input type="number" class="form-control" name="age${familyMemberCount}" required></td>
-            <td><input type="text" class="form-control" name="profession${familyMemberCount}" required></td>
-            <td><input type="text" class="form-control" name="cellNo${familyMemberCount}" required></td>
-            <td><input type="text" class="form-control" name="relationship${familyMemberCount}" required></td>
-            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeFamilyMember(this)">Remove</button></td>
-        </tr>
+// Add Family Member
+function addRow() {
+    const tbody = document.querySelector('#familyTable tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${++rowCount}</td>
+        <td><input type="text" required></td>
+        <td><input type="number" required></td>
+        <td><input type="text" required></td>
+        <td><input type="text" required></td>
+        <td><input type="text" required></td>
+        <td><button class="btn btn-sm btn-danger" onclick="this.closest('tr').remove(); updateSerial()">Remove</button></td>
     `;
-    document.getElementById('familyTable').getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', row);
+    tbody.appendChild(row);
 }
 
-// Function to remove a family member row
-function removeFamilyMember(button) {
-    const row = button.closest('tr');
-    row.remove();
-    familyMemberCount--;
-    updateSerialNumbers();
-}
-
-// Function to update serial numbers after removing a row
-function updateSerialNumbers() {
-    const rows = document.querySelectorAll('#familyTable tbody tr');
-    rows.forEach((row, index) => {
+// Update Serial Numbers
+function updateSerial() {
+    document.querySelectorAll('#familyTable tbody tr').forEach((row, index) => {
         row.cells[0].textContent = index + 1;
     });
 }
 
-// Function to generate PDF
-document.getElementById('nomadForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+// Generate PDF
+document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
+    // Initialize PDF
     const doc = new jsPDF();
+    let yPos = 10;
 
-    // Add form data to PDF
-    doc.setFontSize(12);
-    doc.text(`Location of DHOK: ${document.getElementById('location').value}`, 10, 10);
-    doc.text(`Name of Family Head: ${document.getElementById('familyHead').value}`, 10, 20);
-    doc.text(`S/O, D/O, W/O: ${document.getElementById('parent').value}`, 10, 30);
-    doc.text(`Village: ${document.getElementById('village').value}`, 10, 40);
-    doc.text(`Mohalla: ${document.getElementById('mohalla').value}`, 10, 50);
-    doc.text(`Land Mark: ${document.getElementById('landmark').value}`, 10, 60);
-    doc.text(`Adjacent DHOKS: ${document.getElementById('adjacentDhoks').value}`, 10, 70);
-    doc.text(`Structure Details: ${document.getElementById('structureDetails').value}`, 10, 80);
-    doc.text(`Age: ${document.getElementById('age').value}`, 10, 90);
-    doc.text(`Profession: ${document.getElementById('profession').value}`, 10, 100);
-    doc.text(`Adhaar Card No: ${document.getElementById('adhaar').value}`, 10, 110);
-    doc.text(`Cell No: ${document.getElementById('cellNo').value}`, 10, 120);
-    doc.text(`Vehicle Details: ${document.getElementById('vehicleDetails').value}`, 10, 130);
-
-    // Add family details to PDF as a table
-    const rows = document.querySelectorAll('#familyTable tbody tr');
-    const familyData = [];
-    rows.forEach((row, index) => {
-        const name = row.querySelector('input[name^="name"]').value;
-        const age = row.querySelector('input[name^="age"]').value;
-        const profession = row.querySelector('input[name^="profession"]').value;
-        const cellNo = row.querySelector('input[name^="cellNo"]').value;
-        const relationship = row.querySelector('input[name^="relationship"]').value;
-        familyData.push([index + 1, name, age, profession, cellNo, relationship]);
+    // Add Form Data
+    const fields = ['dhok', 'familyHead', 'parent', 'village', 'mohalla', 'landmark', 
+                    'adjacentDhoks', 'structure', 'age', 'profession', 'adhaar', 'cellNo', 'vehicle'];
+    fields.forEach(field => {
+        doc.text(`${field.replace(/([A-Z])/g, ' $1').toUpperCase()}: ${document.getElementById(field).value}`, 10, yPos);
+        yPos += 10;
     });
 
+    // Add Family Table
+    const familyData = [];
+    document.querySelectorAll('#familyTable tbody tr').forEach(row => {
+        const cells = row.querySelectorAll('input');
+        familyData.push([
+            row.cells[0].textContent,
+            cells[0].value,
+            cells[1].value,
+            cells[2].value,
+            cells[3].value,
+            cells[4].value
+        ]);
+    });
     doc.autoTable({
         head: [['S.No', 'Name', 'Age', 'Profession', 'Cell No', 'Relationship']],
         body: familyData,
-        startY: 140,
+        startY: yPos + 10,
+        theme: 'grid'
     });
 
-    // Handle photo capture
-    const photoInput = document.getElementById('photo');
-    if (photoInput.files && photoInput.files[0]) {
-        const file = photoInput.files[0];
+    // Add Photo
+    const photo = document.getElementById('photo').files[0];
+    if (photo) {
         const reader = new FileReader();
-
-        reader.onload = function(event) {
-            const image = new Image();
-            image.src = event.target.result;
-
-            image.onload = function() {
-                // Add image to PDF (resize if necessary)
-                const imgWidth = 50; // Width of the image in the PDF
-                const imgHeight = (image.height * imgWidth) / image.width; // Maintain aspect ratio
-                doc.addImage(image.src, 'JPEG', 10, doc.autoTable.previous.finalY + 10, imgWidth, imgHeight);
-                doc.save('nomad_details.pdf'); // Save PDF after adding the image
+        reader.onload = (e) => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                doc.addImage(img, 'JPEG', 10, doc.autoTable.previous.finalY + 10, 50, 50);
+                doc.save('nomad_details.pdf');
             };
         };
-
-        reader.readAsDataURL(file); // Convert file to data URL
+        reader.readAsDataURL(photo);
     } else {
-        // If no photo is captured, save the PDF without the image
         doc.save('nomad_details.pdf');
     }
 });
