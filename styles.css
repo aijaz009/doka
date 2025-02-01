@@ -1,46 +1,28 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    padding: 20px;
-}
-
 .container {
-    background-color: #fff;
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    background: white;
 }
 
-h1, h2 {
-    text-align: center;
-    color: #333;
+.form-section label {
+    display: block;
+    margin: 10px 0;
 }
 
-.form-group label {
-    font-weight: bold;
-}
-
-.table {
-    margin-top: 20px;
+.family-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
-.table th, .table td {
-    border: 1px solid #ddd;
+.family-table th, .family-table td {
+    border: 1px solid #000;
     padding: 8px;
     text-align: left;
 }
 
-.table th {
-    background-color: #f2f2f2;
-}
-
-.btn-add {
-    margin-top: 10px;
-}
-
-.btn-generate {
-    margin-top: 20px;
-    width: 100%;
+.family-table th {
+    background-color: #f0f0f0;
 }
