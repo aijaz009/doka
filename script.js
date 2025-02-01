@@ -56,17 +56,22 @@ document.getElementById('nomadForm').addEventListener('submit', async function(e
     doc.text(`Cell No: ${document.getElementById('cellNo').value}`, 10, 120);
     doc.text(`Vehicle Details: ${document.getElementById('vehicleDetails').value}`, 10, 130);
 
-    // Add family details to PDF
+    // Add family details to PDF as a table
     const rows = document.querySelectorAll('#familyTable tbody tr');
-    let y = 150;
+    const familyData = [];
     rows.forEach((row, index) => {
         const name = row.querySelector('input[name^="name"]').value;
         const age = row.querySelector('input[name^="age"]').value;
         const profession = row.querySelector('input[name^="profession"]').value;
         const cellNo = row.querySelector('input[name^="cellNo"]').value;
         const relationship = row.querySelector('input[name^="relationship"]').value;
-        doc.text(`${index + 1}. Name: ${name}, Age: ${age}, Profession: ${profession}, Cell No: ${cellNo}, Relationship: ${relationship}`, 10, y);
-        y += 10;
+        familyData.push([index + 1, name, age, profession, cellNo, relationship]);
+    });
+
+    doc.autoTable({
+        head: [['S.No', 'Name', 'Age', 'Profession', 'Cell No', 'Relationship']],
+        body: familyData,
+        startY: 140,
     });
 
     // Handle photo capture
@@ -83,7 +88,7 @@ document.getElementById('nomadForm').addEventListener('submit', async function(e
                 // Add image to PDF (resize if necessary)
                 const imgWidth = 50; // Width of the image in the PDF
                 const imgHeight = (image.height * imgWidth) / image.width; // Maintain aspect ratio
-                doc.addImage(image.src, 'JPEG', 10, y, imgWidth, imgHeight);
+                doc.addImage(image.src, 'JPEG', 10, doc.autoTable.previous.finalY + 10, imgWidth, imgHeight);
                 doc.save('nomad_details.pdf'); // Save PDF after adding the image
             };
         };
