@@ -12,15 +12,24 @@ class CameraHandler {
         
         // Buttons
         this.startButton = document.getElementById('start-camera');
-        this.captureButton = document.getElementById('capture-photo');
+        this.modalCaptureButton = document.getElementById('modal-capture');
         this.closeButton = document.getElementById('close-camera');
         this.retakeButton = document.getElementById('retake-photo');
 
         // Bind event listeners
         this.startButton.addEventListener('click', () => this.startCamera());
-        this.captureButton.addEventListener('click', () => this.capturePhoto());
+        this.modalCaptureButton.addEventListener('click', () => this.capturePhoto());
         this.closeButton.addEventListener('click', () => this.closeCamera());
         this.retakeButton.addEventListener('click', () => this.retakePhoto());
+
+        // Bind keyboard events for the modal
+        this.modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeCamera();
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                this.capturePhoto();
+            }
+        });
     }
 
     async startCamera() {
@@ -35,7 +44,7 @@ class CameraHandler {
             
             this.video.srcObject = this.stream;
             this.modal.style.display = 'block';
-            this.captureButton.disabled = false;
+            this.modalCaptureButton.disabled = false;
             
             // Wait for video to be ready
             await new Promise((resolve) => {
@@ -50,16 +59,22 @@ class CameraHandler {
     }
 
     capturePhoto() {
+        if (!this.stream) return;
+
         // Set canvas dimensions to match video
-        this.canvas.width = this.video.videoWidth;
-        this.canvas.height = this.video.videoHeight;
+        const videoAspectRatio = this.video.videoWidth / this.video.videoHeight;
+        const width = 640;
+        const height = width / videoAspectRatio;
+        
+        this.canvas.width = width;
+        this.canvas.height = height;
         
         // Draw video frame to canvas
         const context = this.canvas.getContext('2d');
-        context.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        context.drawImage(this.video, 0, 0, width, height);
         
         // Convert to data URL
-        this.photoData = this.canvas.toDataURL('image/jpeg');
+        this.photoData = this.canvas.toDataURL('image/jpeg', 0.8);
         
         // Display captured photo
         this.capturedPhoto.src = this.photoData;
@@ -79,7 +94,7 @@ class CameraHandler {
         
         this.video.srcObject = null;
         this.modal.style.display = 'none';
-        this.captureButton.disabled = true;
+        this.modalCaptureButton.disabled = true;
     }
 
     retakePhoto() {
