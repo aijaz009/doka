@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomad Details Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Police Station Lar.</h1>
+        <h2>DETAILS OF NOMADS</h2>
+        <form id="nomadForm">
+            <div class="form-group">
+                <label for="location">LOCATION OF DHOK</label>
+                <input type="text" class="form-control" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="familyHead">Name of Family Head</label>
+                <input type="text" class="form-control" id="familyHead" name="familyHead" required>
+            </div>
+            <div class="form-group">
+                <label for="parent">S/O, D/O, W/O</label>
+                <input type="text" class="form-control" id="parent" name="parent" required>
+            </div>
+            <div class="form-group">
+                <label for="village">Village</label>
+                <input type="text" class="form-control" id="village" name="village" required>
+            </div>
+            <div class="form-group">
+                <label for="mohalla">Mohalla</label>
+                <input type="text" class="form-control" id="mohalla" name="mohalla" required>
+            </div>
+            <div class="form-group">
+                <label for="landmark">Land Mark</label>
+                <input type="text" class="form-control" id="landmark" name="landmark" required>
+            </div>
+            <div class="form-group">
+                <label for="adjacentDhoks">Adjacent DHOKS</label>
+                <input type="text" class="form-control" id="adjacentDhoks" name="adjacentDhoks" required>
+            </div>
+            <div class="form-group">
+                <label for="structureDetails">Structure Details</label>
+                <input type="text" class="form-control" id="structureDetails" name="structureDetails" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="profession">Profession</label>
+                <input type="text" class="form-control" id="profession" name="profession" required>
+            </div>
+            <div class="form-group">
+                <label for="adhaar">Adhaar Card No</label>
+                <input type="text" class="form-control" id="adhaar" name="adhaar" required>
+            </div>
+            <div class="form-group">
+                <label for="cellNo">Cell No</label>
+                <input type="text" class="form-control" id="cellNo" name="cellNo" required>
+            </div>
+            <div class="form-group">
+                <label for="vehicleDetails">Vehicle Details if any</label>
+                <input type="text" class="form-control" id="vehicleDetails" name="vehicleDetails" value="Nil">
+            </div>
+
+            <h3>FAMILY DETAILS:</h3>
+            <table class="table" id="familyTable">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Profession</th>
+                        <th>Cell No</th>
+                        <th>Relationship with family-Head</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be added dynamically here -->
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-primary btn-add" onclick="addFamilyMember()">Add Family Member</button>
+
+            <div class="form-group">
+                <label for="otherDetails">Any Other details:</label>
+                <textarea class="form-control" id="otherDetails" name="otherDetails"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Take Live Photo</label>
+                <input type="file" class="form-control" id="photo" name="photo" accept="image/*" capture="camera">
+            </div>
+
+            <button type="submit" class="btn btn-success btn-generate">Generate PDF</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
