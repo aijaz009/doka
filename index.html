@@ -4,35 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomad Details</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-4">Police Station Lar.</h1>
-        <h2 class="text-center mb-4">DETAILS OF NOMADS</h2>
+        <h1>Police    Station    Lar.</h1>
+        <h2>DETAILS OF NOMADS</h2>
         
-        <form id="form" class="form">
-            <!-- Fields as per PDF -->
-            <div class="form-section">
-                <label>LOCATION OF DHOK: <input type="text" id="dhok" required></label>
-                <label>Name of Family Head: <input type="text" id="familyHead" required></label>
-                <label>S/O, D/O, W/O: <input type="text" id="parent" required></label>
-                <label>Village: <input type="text" id="village" required></label>
-                <label>Mohalla: <input type="text" id="mohalla" required></label>
-                <label>Land Mark: <input type="text" id="landmark" required></label>
-                <label>Adjacent DHOKS: <input type="text" id="adjacentDhoks" required></label>
-                <label>Structure Details: <input type="text" id="structure" required></label>
-                <label>Age: <input type="number" id="age" required></label>
-                <label>Profession: <input type="text" id="profession" required></label>
-                <label>Adhaar Card No: <input type="text" id="adhaar" required></label>
-                <label>Cell No: <input type="text" id="cellNo" required></label>
-                <label>Vehicle Details: <input type="text" id="vehicle" value="Nil"></label>
+        <!-- Form Fields -->
+        <form id="form">
+            <div class="field">
+                <label>LOCATION OF DHOK <input type="text" id="dhok" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Name of Family Head <input type="text" id="familyHead" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>S/O, D/O, W/O <input type="text" id="parent" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Village <input type="text" id="village" placeholder="_____"> Mohalla <input type="text" id="mohalla" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Land Mark <input type="text" id="landmark" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Adjacent DHOKS <input type="text" id="adjacentDhoks" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Structure Details <input type="text" id="structure" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Age <input type="number" id="age" placeholder="_____"> Profession <input type="text" id="profession" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Adhaar Card No <input type="text" id="adhaar" placeholder="_____"> Cell No <input type="text" id="cellNo" placeholder="_____"></label>
+            </div>
+            <div class="field">
+                <label>Vehicle Details if any <input type="text" id="vehicle" placeholder="___ Nil ___"></label>
             </div>
 
             <!-- Family Table -->
-            <h3 class="mt-4">FAMILY DETAILS:</h3>
-            <table id="familyTable" class="family-table">
+            <h3>FAMILY DETAILS:</h3>
+            <table id="familyTable">
                 <thead>
                     <tr>
                         <th>S.No</th>
@@ -40,28 +54,28 @@
                         <th>Age</th>
                         <th>Profession</th>
                         <th>Cell No</th>
-                        <th>Relationship</th>
-                        <th>Action</th>
+                        <th>Relationship with family-Head</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    <!-- Rows added dynamically -->
+                </tbody>
             </table>
-            <button type="button" class="btn btn-secondary mt-2" onclick="addRow()">Add Member</button>
+            <button type="button" onclick="addFamilyRow()">Add Row</button>
 
             <!-- Live Photo -->
-            <div class="mt-4">
-                <label>Live Photo: 
+            <div class="field">
+                <label>Take Live Photo: 
                     <input type="file" id="photo" accept="image/*" capture="camera">
                 </label>
             </div>
 
             <!-- Generate PDF -->
-            <button type="submit" class="btn btn-primary mt-4">Generate PDF</button>
+            <button type="submit">Generate PDF</button>
         </form>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
