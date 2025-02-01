@@ -1,38 +1,33 @@
 class CameraHandler {
     constructor() {
         this.stream = null;
-        this.photoData = null;
-        
-        // DOM Elements
-        this.modal = document.getElementById('camera-modal');
-        this.video = document.getElementById('camera-feed');
-        this.canvas = document.getElementById('photo-canvas');
-        this.capturedPhoto = document.getElementById('captured-photo');
+        this.videoElement = document.getElementById('videoElement');
+        this.canvas = document.getElementById('canvas');
+        this.capturedImage = document.getElementById('captured-image');
         this.photoPlaceholder = document.getElementById('photo-placeholder');
+        this.cameraModal = document.getElementById('cameraModal');
         
         // Buttons
-        this.startButton = document.getElementById('start-camera');
-        this.modalCaptureButton = document.getElementById('modal-capture');
-        this.closeButton = document.getElementById('close-camera');
-        this.retakeButton = document.getElementById('retake-photo');
+        this.openCameraBtn = document.getElementById('openCamera');
+        this.closeCameraBtn = document.getElementById('closeCamera');
+        this.capturePhotoBtn = document.getElementById('capturePhoto');
+        this.retakePhotoBtn = document.getElementById('retakePhoto');
 
         // Bind event listeners
-        this.startButton.addEventListener('click', () => this.startCamera());
-        this.modalCaptureButton.addEventListener('click', () => this.capturePhoto());
-        this.closeButton.addEventListener('click', () => this.closeCamera());
-        this.retakeButton.addEventListener('click', () => this.retakePhoto());
+        this.openCameraBtn.addEventListener('click', () => this.openCamera());
+        this.closeCameraBtn.addEventListener('click', () => this.closeCamera());
+        this.capturePhotoBtn.addEventListener('click', () => this.capturePhoto());
+        this.retakePhotoBtn.addEventListener('click', () => this.retakePhoto());
 
-        // Bind keyboard events for the modal
-        this.modal.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+        // Handle modal close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.cameraModal.style.display === 'block') {
                 this.closeCamera();
-            } else if (e.key === 'Enter' || e.key === ' ') {
-                this.capturePhoto();
             }
         });
     }
 
-    async startCamera() {
+    async openCamera() {
         try {
             this.stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -42,16 +37,14 @@ class CameraHandler {
                 }
             });
             
-            this.video.srcObject = this.stream;
-            this.modal.style.display = 'block';
-            this.modalCaptureButton.disabled = false;
+            this.videoElement.srcObject = this.stream;
+            this.cameraModal.style.display = 'block';
             
-            // Wait for video to be ready
             await new Promise((resolve) => {
-                this.video.onloadedmetadata = resolve;
+                this.videoElement.onloadedmetadata = resolve;
             });
             
-            this.video.play();
+            this.videoElement.play();
         } catch (err) {
             console.error('Error accessing camera:', err);
             alert('Unable to access camera. Please ensure you have granted camera permissions.');
@@ -61,28 +54,28 @@ class CameraHandler {
     capturePhoto() {
         if (!this.stream) return;
 
-        // Set canvas dimensions to match video
-        const videoAspectRatio = this.video.videoWidth / this.video.videoHeight;
-        const width = 640;
-        const height = width / videoAspectRatio;
-        
-        this.canvas.width = width;
-        this.canvas.height = height;
-        
-        // Draw video frame to canvas
         const context = this.canvas.getContext('2d');
-        context.drawImage(this.video, 0, 0, width, height);
         
-        // Convert to data URL
-        this.photoData = this.canvas.toDataURL('image/jpeg', 0.8);
+        // Set canvas size to match video dimensions
+        this.canvas.width = this.videoElement.videoWidth;
+        this.canvas.height = this.videoElement.videoHeight;
         
-        // Display captured photo
-        this.capturedPhoto.src = this.photoData;
-        this.capturedPhoto.style.display = 'block';
+        // Draw the video frame to canvas
+        context.drawImage(this.videoElement, 0, 0);
+        
+        // Convert to image
+        const imageData = this.canvas.toDataURL('image/jpeg');
+        
+        // Display the captured image
+        this.capturedImage.src = imageData;
+        this.capturedImage.style.display = 'block';
         this.photoPlaceholder.style.display = 'none';
         
-        // Show retake button and close camera
-        this.retakeButton.style.display = 'block';
+        // Show retake button
+        this.retakePhotoBtn.style.display = 'block';
+        this.openCameraBtn.textContent = 'Change Photo';
+        
+        // Close camera
         this.closeCamera();
     }
 
@@ -92,21 +85,20 @@ class CameraHandler {
             this.stream = null;
         }
         
-        this.video.srcObject = null;
-        this.modal.style.display = 'none';
-        this.modalCaptureButton.disabled = true;
+        this.videoElement.srcObject = null;
+        this.cameraModal.style.display = 'none';
     }
 
     retakePhoto() {
-        this.photoData = null;
-        this.capturedPhoto.style.display = 'none';
+        this.capturedImage.style.display = 'none';
         this.photoPlaceholder.style.display = 'block';
-        this.retakeButton.style.display = 'none';
-        this.startCamera();
+        this.retakePhotoBtn.style.display = 'none';
+        this.openCameraBtn.textContent = 'Open Camera';
+        this.openCamera();
     }
 
-    getPhotoData() {
-        return this.photoData;
+    getImageData() {
+        return this.capturedImage.style.display === 'none' ? null : this.capturedImage.src;
     }
 }
 
