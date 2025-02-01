@@ -1,28 +1,46 @@
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    background: white;
+body {
+    font-family: Arial;
+    margin: 20px;
 }
 
-.form-section label {
-    display: block;
+.container {
+    max-width: 800px;
+}
+
+h1, h2, h3 {
+    text-align: center;
     margin: 10px 0;
 }
 
-.family-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.field {
+    margin: 15px 0;
 }
 
-.family-table th, .family-table td {
+input {
+    border: none;
+    border-bottom: 1px solid #000;
+    margin: 0 5px;
+    padding: 2px;
+    background: transparent;
+}
+
+input::placeholder {
+    color: #666;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
     border: 1px solid #000;
     padding: 8px;
     text-align: left;
 }
 
-.family-table th {
-    background-color: #f0f0f0;
+button {
+    margin: 10px 0;
+    padding: 8px 16px;
 }
