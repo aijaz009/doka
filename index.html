@@ -4,143 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomad Details Form</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="form-header">
-            <h1>Police Station Details of Nomads</h1>
+    <form id="nomadForm">
+        <h2>Details of Nomads</h2>
+        <div class="form-group">
+            <label for="familyHead">Name of Family Head:</label>
+            <input type="text" id="familyHead" name="familyHead">
+        </div>
+        <div class="form-group">
+            <label for="relation">S/O, D/O, W/O:</label>
+            <input type="text" id="relation" name="relation">
+        </div>
+        <!-- Add other fields similarly -->
+        
+        <div class="form-group">
+            <label for="image">Capture Image:</label>
+            <video id="video" width="320" height="240" autoplay></video>
+            <button id="startButton">Start Video</button>
+            <button id="captureButton">Capture Photo</button>
+            <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+            <img id="photo" alt="The screen capture will appear in this box." style="display:none;">
         </div>
 
-        <div class="main-form">
-            <div class="photo-section">
-                <div class="photo-container">
-                    <img id="captured-image" style="display: none; max-width: 100%; max-height: 100%;">
-                    <div id="photo-placeholder">Click 'Open Camera' to take photo</div>
-                </div>
-                <div class="camera-buttons">
-                    <button id="openCamera" class="btn primary">Open Camera</button>
-                    <button id="retakePhoto" class="btn" style="display: none;">Retake Photo</button>
-                </div>
-            </div>
+        <button type="submit">Submit</button>
+    </form>
 
-            <!-- Camera Modal -->
-            <div id="cameraModal" class="modal">
-                <div class="modal-content">
-                    <div class="camera-view">
-                        <video id="videoElement" autoplay playsinline></video>
-                        <canvas id="canvas" style="display: none;"></canvas>
-                    </div>
-                    <div class="modal-buttons">
-                        <button id="capturePhoto" class="btn primary">Capture Photo</button>
-                        <button id="closeCamera" class="btn">Close</button>
-                    </div>
-                </div>
-            </div>
-
-            <form id="nomadForm">
-                <div class="form-group">
-                    <label>Location of Dhok</label>
-                    <input type="text" name="dhokLocation" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Name of Family Head</label>
-                    <input type="text" name="familyHead" required>
-                </div>
-
-                <div class="form-group">
-                    <label>S/O, D/O, W/O</label>
-                    <input type="text" name="relation">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Village</label>
-                        <input type="text" name="village">
-                    </div>
-                    <div class="form-group">
-                        <label>Mohalla</label>
-                        <input type="text" name="mohalla">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Land Mark</label>
-                    <input type="text" name="landmark">
-                </div>
-
-                <div class="form-group">
-                    <label>Adjacent DHOKS</label>
-                    <input type="text" name="adjacentDhoks">
-                </div>
-
-                <div class="form-group">
-                    <label>Structure Details</label>
-                    <input type="text" name="structureDetails">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Age</label>
-                        <input type="number" name="age" min="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Profession</label>
-                        <input type="text" name="profession">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Adhaar Card No</label>
-                        <input type="text" name="adhaarNo">
-                    </div>
-                    <div class="form-group">
-                        <label>Cell No</label>
-                        <input type="tel" name="cellNo">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Vehicle Details if any</label>
-                    <input type="text" name="vehicleDetails">
-                </div>
-
-                <div class="family-details">
-                    <h3>Family Details</h3>
-                    <table id="familyTable">
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Name</th>
-                                <th>Age</th>
-                                <th>Profession</th>
-                                <th>Cell No</th>
-                                <th>Relationship</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <button type="button" id="addFamilyMember" class="btn">Add Family Member</button>
-                </div>
-
-                <div class="form-group">
-                    <label>Any Other Details</label>
-                    <textarea name="otherDetails" rows="3"></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" id="generatePDF" class="btn primary">Generate PDF</button>
-                    <button type="reset" class="btn">Reset Form</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="camera.js"></script>
-    <script src="form.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
