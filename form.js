@@ -101,6 +101,7 @@ class FormHandler {
         
         // Title
         doc.setFontSize(16);
+        doc.text("POLICE STATION LAR", 105, 15, { align: "center" });
         doc.text("DETAILS OF NOMADS", 105, 15, { align: "center" });
         
         // Add photo if exists
