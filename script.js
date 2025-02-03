@@ -47,7 +47,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const doc = new jsPDF();
         doc.text('Details of Nomads', 10, 10);
         doc.addImage(imgData, 'PNG', 10, 20, 50, 50); // Adjust position and size as needed
-        // Add more form data to PDF
+
+        // Add form data to PDF
+        let y = 70;
+        doc.text(`Name of Family Head: ${formData.get('familyHead')}`, 10, y);
+        y += 10;
+        doc.text(`S/O, D/O, W/O: ${formData.get('relation')}`, 10, y);
+        y += 10;
+
+        // Add family details table
+        const tableData = [];
+        const headers = ['S.No', 'Name', 'Age', 'Profession', 'Cell No', 'Relationship'];
+        tableData.push(headers);
+        const familyDetails = JSON.parse(formData.get('familyDetails'));
+        familyDetails.forEach((detail, index) => {
+            tableData.push([index + 1, detail.name, detail.age, detail.profession, detail.cellNo, detail.relationship]);
+        });
+
+        doc.autoTable({
+            head: [headers],
+            body: tableData.slice(1),
+            startY: y,
+            theme: 'grid'
+        });
 
         doc.save('nomad_details.pdf');
     });
