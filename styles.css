@@ -21,3 +21,13 @@ input, select, textarea {
 #video, #canvas, #photo {
     border: 1px solid black;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
