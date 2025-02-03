@@ -28,6 +28,30 @@
             <img id="photo" alt="The screen capture will appear in this box." style="display:none;">
         </div>
 
+        <table id="familyDetailsTable">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Profession</th>
+                    <th>Cell No</th>
+                    <th>Relationship with family Head</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01</td>
+                    <td><input type="text" name="familyDetails[0][name]"></td>
+                    <td><input type="text" name="familyDetails[0][age]"></td>
+                    <td><input type="text" name="familyDetails[0][profession]"></td>
+                    <td><input type="text" name="familyDetails[0][cellNo]"></td>
+                    <td><input type="text" name="familyDetails[0][relationship]"></td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+
         <button type="submit">Submit</button>
     </form>
 
